@@ -1,0 +1,10 @@
+git add app.txt // staging area로 이동
+git commit -m 'test' // repository로 이동
+git status // 상태창 ! (어떤 파일이 스테이징 되었는지 확인)
+git log --all --oneline // commit한 내역 확인
+git diff // 최근 commmit vs 현재파일 차이점 보여줌 (j,k로 스크롤이동, q로 종료)
+git difftool // 최근 commmit vs 현재파일 차이점 더 자세하게 보여줌 (hjkl 키로 방향키 이동가능, :q, :qa로 종료)
+git difftool 커밋아이디 // 현재파일 vs 특정커밋 비교가능
+git branch 브랜치명 // 최근 커밋파일의 사본생성
+git switch 브랜치명 // 브랜치로 이동
+git merge // 브랜치 합치기 (충돌 해결은 코드고치고 git add & git commit)
