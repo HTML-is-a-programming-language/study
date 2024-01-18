@@ -1,8 +1,23 @@
 <script>
+	//import {onMount} from 'svelte'
 	let name = 'Fruits';
 	let age = 85;
 	let toggle = false;
 	let fruits = ['Apple', 'Banana', 'Cherry', 'Orange', 'Mango']
+	let isRed = false;
+	let text = ''
+	//onMount(() => {
+	//	const box = document.querySelector('.box');
+	//	box.addEventListener('click', () => {isRed = !isRed});
+	//});
+
+	function enter() {
+		name = 'enter'
+	}
+
+	function leave() {
+		name = 'leave'
+	}
 
 	if (toggle) {
 
@@ -45,6 +60,32 @@
 	Eat it!
 </button>
 
+<div class="box"
+	style="background-color: {isRed ? 'red' : 'orange'};"
+	on:click={() => {isRed = !isRed}}
+	on:mouseenter={enter}
+	on:mouseleave={leave}>Box!</div>
+
+
+<h1>
+	{text}
+</h1>
+<input type="text"
+	value={text}
+	on:input={(e) => {text = e.target.value}} />
+<input type="text"
+	bind:value={text} />
+<button on:click={() => {text = 'Heropy'}}>
+	Click
+</button>
+
+<style>
+	.box{
+		width: 300px;
+		height: 150px;
+		background-color: orange;
+	}
+</style>
 
 <h2 class={age < 85 ? 'active' : ''}>
 	{age}
@@ -55,11 +96,11 @@
 	Assign
 </button>
 
-<style>
+<!-- <style>
 	h1 {
 		color: red;
 	}
 	.active {
 		color: blue;
 	}
-</style>
+</style> -->
