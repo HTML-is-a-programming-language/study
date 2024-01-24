@@ -1,7 +1,7 @@
 <script>
 	//import {onMount} from 'svelte'
 	import Fruits from './Fruits.svelte'
-	let name = 'Fruits';
+	//let name = 'Fruits';
 	let age = 85;
 	let toggle = false;
 	let fruits = ['Apple', 'Banana', 'Cherry', 'Orange', 'Mango']
@@ -40,7 +40,18 @@
 	function deleteFruit() {
 		fruits = fruits.slice(1);
 	}
+
+	import { storeName } from './store.js'
+	import Parent from './Parent.svelte'
+
+	let name = 'world';
+	let hello = '';
+	$storeName = name;
+	console.log(storeName);
+	console.log($storeName);
 </script>
+
+<Parent />
 
 <Fruits {fruits} />
 <Fruits {fruits} reverse />
