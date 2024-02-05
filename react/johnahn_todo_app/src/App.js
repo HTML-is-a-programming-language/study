@@ -78,7 +78,7 @@ export default class App extends Component {
             {data.title}
             <button style={this.btnStyle} onClick={() => this.handleClick(data.id)}>x</button>
           </div>
-          ))}d
+          ))}
 
             <form style={{display: 'flex'}} onSubmit={this.handleSubmit}>
               <input
