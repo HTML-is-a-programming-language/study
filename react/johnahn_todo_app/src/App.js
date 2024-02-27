@@ -43,7 +43,7 @@ export default function App() {
       <div className="w-full p-6 m-4 bg-white rounded shadow lg:w-3/4 lg:max-w-lg">
         <div className="flex justify-between mb-3">
           <h1>할 일 목록</h1>
-          <button onClick={handleRemoveClick}>Delete All</button>
+          <button onClick={handleRemoveClick}>전체삭제</button>
         </div>
 
         <Lists handleClick={handleClick} todoData={todoData} setTodoData={setTodoData} />

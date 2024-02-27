@@ -38,8 +38,8 @@ const List = React.memo(({id, title, completed, todoData, setTodoData, provided,
         return (
             <div
                 className={`flex items-center justify-between w-full px-4 py-1 my-2 text-gray-600 bg-gray-100 border rounded`}>
-                <div className='items-center'>
-                    <form onSubmit={handleSubmit}>
+                <div className='w-1/2'>
+                    <form onSubmit={handleSubmit} >
                         <input
                             value={editedTitle}
                             onChange={handleEditChange}
@@ -47,9 +47,9 @@ const List = React.memo(({id, title, completed, todoData, setTodoData, provided,
                         />
                     </form>
                 </div>
-                <div className='items-center'>
-                    <button className='px-4 py-2 float-right' onClick={() => setIsEditing(false)}>x</button>
-                    <button onClick={handleSubmit} className='px-4 py-2 float-right' type='submit'>save</button>
+                <div className='items-center flex'>
+                    <button onClick={handleSubmit} className='px-4 py-2' type='submit'>저장</button>
+                    <button className='px-4 py-2' onClick={() => setIsEditing(false)}>취소</button>
                 </div>
             </div>
         )
@@ -66,9 +66,9 @@ const List = React.memo(({id, title, completed, todoData, setTodoData, provided,
                     defaultChecked={completed} />{" "}
                     <span className={completed ? "line-through" : undefined}>{title}</span>
                 </div>
-                <div className='items-center'>
-                    <button className='px-4 py-2 float-right' onClick={() => handleClick(id)}>x</button>
-                    <button className='px-4 py-2 float-right' onClick={() => setIsEditing(true)}>edit</button>
+                <div className='min-w-[128px]'>
+                    <button className='px-4 py-2' onClick={() => setIsEditing(true)}>수정</button>
+                    <button className='px-4 py-2' onClick={() => handleClick(id)}>삭제</button>
                 </div>
             </div>
         )
