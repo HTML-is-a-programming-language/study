@@ -4,9 +4,9 @@
 
 .black-nav {
   display: flex;
-  background: black;
+  background: #000;
   width: 100%;
-  color: white;
+  color: #FFF;
   padding-left: 20px;
 }
 
