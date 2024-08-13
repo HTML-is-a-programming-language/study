@@ -45,7 +45,7 @@ function App() {
         글제목.map(function(a, i){
           return (
             <div className="list" key={i}>
-              <h4 onClick={()=>{ setModal(!modal) }}>{ 글제목[i] }
+              <h4 onClick={()=>{ setModal(true) }}>{ 글제목[i] }
                 <span onClick={()=>{
                   let copy = [...따봉];
                   copy[i] = copy[i] + 1;
@@ -59,7 +59,7 @@ function App() {
       }
 
       {
-        modal == true ? <Modal></Modal> : null
+        modal == true ? <Modal 글제목변경={글제목변경} 글제목={글제목}/> : null
       }
 
       {/* <Array></Array> */}
@@ -67,12 +67,17 @@ function App() {
   );
 }
 
-function Modal(){
+function Modal(props){
   return (
     <div className='modal'>
-      <h4>제목</h4>
+      <h4>{props.글제목[0]}</h4>
       <p>날짜</p>
       <p>상세내용</p>
+      <button onClick={()=>{
+        let copy = [...props.글제목];
+        copy[0] = '여자코트 추천';
+        props.글제목변경(copy);
+      }}>글수정</button>
     </div>
   )
 }
