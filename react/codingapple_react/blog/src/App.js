@@ -8,8 +8,8 @@ function App() {
 
   let post = '강남 우동 맛집';
   let [글제목, 글제목변경] = useState(['남자코트 추천', '강남 우동맛집', '파이썬독학']);
-  console.log(글제목);
   let [따봉, 따봉변경] = useState(0);
+  let [modal, setModal] = useState(false);
 
   return (
     <div className="App">
@@ -28,7 +28,6 @@ function App() {
 
         let copy = [...글제목]; // ...은 괄호를 벗기는 문법
         copy[0] = '여자코트 추천'
-        console.log(copy == 글제목);
         글제목변경(copy);
       }}>글수정</button>
 
@@ -41,11 +40,13 @@ function App() {
         <p>2월 17일 발행</p>
       </div>
       <div className="list">
-        <h4>{ 글제목[2] }</h4>
+        <h4 onClick={()=>{ modal == false ? setModal(true) : setModal(false) }}>{ 글제목[2] }</h4>
         <p>2월 17일 발행</p>
       </div>
 
-      <Modal/>
+      {
+        modal == true ? <Modal></Modal> : null
+      }
 
     </div>
   );
