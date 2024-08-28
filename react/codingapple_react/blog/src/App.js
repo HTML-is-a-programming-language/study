@@ -12,6 +12,9 @@ function App() {
   let [modal, setModal] = useState(false);
   let [title, setTitle] = useState(0);
   let [입력값, 입력값변경] = useState('');
+  const today = new Date();
+  const formattedDate = `${today.getMonth() + 1}월 ${today.getDate()}일`;
+  let [date, setDate] = useState(['2월 17일 발행','2월 17일 발행','2월 17일 발행']); // 응용3. 날짜데이터는?
 
   return (
     <div className="App">
@@ -62,11 +65,14 @@ function App() {
                   console.log(현재글제목);
                 }}>삭제</button> 내가 만든 숙제*/}
               </h4>
-              <p>2월 17일 발행</p>
+              <p>{date[i]}</p>
               <button onClick={(e)=>{
                 let copy = [...글제목];
                 copy.splice(i, 1);
-                글제목변경(copy)
+                글제목변경(copy);
+                let plus = [...따봉];
+                plus.splice(i, 1);
+                따봉변경(plus); // 응용2. 글을 하나 추가하면 따봉갯수 개별적용하던 것도 이상해질 수 있습니다.
               }}>삭제</button>
             </div>
           )
@@ -84,7 +90,13 @@ function App() {
       <button onClick={()=>{
         let copy = [...글제목];
         copy.unshift(입력값);
-        글제목변경(copy)
+        입력값 == false ? null : 글제목변경(copy); // 응용1. 글에 아무것도 입력안하고 발행버튼 누르는거 막으려면?
+        let plus = [...따봉];
+        plus.unshift(0);
+        따봉변경(plus); // 응용2. 글을 하나 추가하면 따봉갯수 개별적용하던 것도 이상해질 수 있습니다.
+        let addDate = [...date];
+        addDate.unshift(formattedDate + ' 발행');
+        setDate(addDate); // 응용3. 날짜데이터는?
       }}>글발행</button>
 
       {
