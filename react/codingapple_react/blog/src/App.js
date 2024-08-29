@@ -104,7 +104,7 @@ function App() {
       {
         modal == true ? <Modal 글제목변경={글제목변경} 글제목={글제목} title={title}/> : null
       }
-      <Modal2></Modal2>
+      {/* <Modal2></Modal2> */}
       {/* <Array></Array> */}
     </div>
   );
@@ -125,7 +125,7 @@ function Modal(props){
   )
 }
 
-class Modal2 extends React.Component {
+/*class Modal2 extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -142,9 +142,9 @@ class Modal2 extends React.Component {
       </div>
     )
   }
-}
+}*/
 
-function Array(){
+/*function Array(){
   var 어레이 = [];
   for (var i = 0; i < 3; i++) {
     어레이.push(<div>안녕</div>)
@@ -154,7 +154,7 @@ function Array(){
       { 어레이 }
     </div>
   )
-}
+}*/
 
 
 export default App;
