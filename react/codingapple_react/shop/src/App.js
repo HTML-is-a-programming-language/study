@@ -15,9 +15,9 @@ function App() {
     <div className="App">
       <Navbar bg="dark" data-bs-theme="dark">
         <Container>
-          <Navbar.Brand href="#home">Shopping mall</Navbar.Brand>
+          <Navbar.Brand onClick={()=>{ navigate('/shopping_mall') }}>Shopping mall</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link onClick={()=>{ navigate('/') }}>Home</Nav.Link>
+            <Nav.Link onClick={()=>{ navigate('/shopping_mall') }}>Home</Nav.Link>
             <Nav.Link onClick={()=>{ navigate('/detail') }}>Detail</Nav.Link>
           </Nav>
         </Container>
@@ -27,7 +27,7 @@ function App() {
       {/* <Link to="/detail">상세페이지</Link> */}
 
       <Routes>
-        <Route path="/" element={
+        <Route path="/shopping_mall" element={
           <>
             <div className='main-bg'></div>
             {/* <div className='main-bg' style={{ backgroundImage : 'url('+ bg +')'}}></div> */}
@@ -47,7 +47,8 @@ function App() {
               </div>
             </div>
           </>
-        } />
+        }>
+        </Route>
         <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
         <Route path="*" element={<div>없는페이지요</div>} />
         <Route path="/about" element={<About />}>
@@ -58,6 +59,7 @@ function App() {
           <Route path="one" element={<div>첫 주문시 양배추즙 서비스</div>} />
           <Route path="two" element={<div>생일기념 쿠폰받기</div>} />
         </Route>
+
       </Routes>
     </div>
   );
@@ -82,8 +84,10 @@ function EventPage(){
 }
 
 function Card(props){
+  let navigate = useNavigate();
+
   return (
-    <div className="col-md-4">
+    <div className="col-md-4" onClick={()=>{ navigate('/detail/'+props.shoes.id+'') }}>
       <img src={'https://codingapple1.github.io/shop/shoes'+props.i+'.jpg'} width="80%" />
       <h4>{props.shoes.title}</h4>
       <p>{props.shoes.price}</p>
