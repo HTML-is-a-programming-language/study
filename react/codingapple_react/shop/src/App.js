@@ -9,8 +9,18 @@ import axios from 'axios';
 
 function App() {
 
+  // 리액트에서 서버와 통신하려면 ajax 1 내가 만든 숙제 / 동일함
   let [shoes, setShoes] = useState(data);
   let navigate = useNavigate();
+  // 리액트에서 서버와 통신하려면 ajax 2 : post, fetch 내가 만든 숙제
+  // 응용1. 버튼 2회 누를 때는 7,8,9번 상품 가져오려면?
+  let [count, setCount] = useState(0);
+  // 리액트에서 서버와 통신하려면 ajax 2 : post, fetch 내가 만든 숙제
+  // 응용2. 버튼 3회 누를 때는 상품 더 없다고 알려주기
+  let [hide, setHide] = useState(true);
+  // 리액트에서 서버와 통신하려면 ajax 2 : post, fetch 내가 만든 숙제
+  // 응용3. 버튼누르면 "로딩중입니다" 글자 띄우기
+  let [load, setLoad] = useState(true);
 
   return (
     <div className="App">
@@ -66,17 +76,83 @@ function App() {
               요청결과는 axios.get('url').then()
               ajax 요청 실패할 경우
               .catch(()=>{})*/}
-              <button onClick={()=>{
-                axios.get('https://codingapple1.github.io/shop/data2.json')
-                .then((결과)=>{
-                  console.log(결과.data);
-                  setShoes(prevList => [...prevList, ...결과.data]);
-                })
-                .catch(()=>{
-                  console.log('실패함')
-                })
 
-              }}>버튼</button>
+              {/* 리액트에서 서버와 통신하려면 ajax 2 : post, fetch 내가 만든 숙제
+              응용2. 버튼 3회 누를 때는 상품 더 없다고 알려주기 */}
+              {
+                hide == true
+                ? <button onClick={()=>{
+                  // 로딩중UI 띄우기
+                  setLoad(false);
+                  console.log(count);
+                  // 리액트에서 서버와 통신하려면 ajax 2 : post, fetch 내가 만든 숙제
+                  // 응용1. 버튼 2회 누를 때는 7,8,9번 상품 가져오려면?
+                  if(count == 0){
+                    axios.get('https://codingapple1.github.io/shop/data2.json')
+                    .then((결과)=>{
+                      // 로딩중UI 숨기기
+                      setLoad(true);
+                      console.log(결과.data);
+                      // 리액트에서 서버와 통신하려면 ajax 1 내가 만든 숙제
+                      // setShoes(prevList => [...prevList, ...결과.data]);
+                      // 리액트에서 서버와 통신하려면 ajax 1 숙제 답안
+                      let copy = [...shoes, ...결과.data];
+                      setShoes(copy);
+                    })
+                    .catch(()=>{
+                      setLoad(true);
+                      console.log('실패함')
+                    })
+                    setCount(count+1);
+                  } else if(count == 1){
+                    axios.get('https://codingapple1.github.io/shop/data3.json')
+                    .then((결과)=>{
+                      setLoad(true);
+                      console.log(결과.data);
+                      let copy = [...shoes, ...결과.data];
+                      setShoes(copy);
+                    })
+                    .catch(()=>{
+                      setLoad(true);
+                      console.log('실패함')
+                    })
+                    setCount(count+1);
+                  } else {
+                    setLoad(true);
+                    // 리액트에서 서버와 통신하려면 ajax 2 : post, fetch 내가 만든 숙제
+                    // 응용2. 버튼 3회 누를 때는 상품 더 없다고 알려주기
+                    alert('더보기 할 상품이 없습니다.');
+                    setHide(true);
+                  }
+
+                  // 서버로 데이터전송하는 POST요청
+                  // axios.post('/test',{name : 'kim'})
+
+                  // 동시에 ajax 요청 여러개하려면
+                  // Promise.all([ axios.get('/test1'), axios.get('/test2')])
+                  // .then(()=>{ })
+                  // 원래는 서버와 문자만 주고받을 수 있습니다
+                  // "{"name" : "kim"}" 따옴표쳐놓으면 array, object도 주고받기 가능, 일명 JSON
+                  // axios가 array로 자동으로 바꿔줌
+                  // 그냥 JS 기본문법으로도 GET요청 가능
+                  // fetch('https://codingapple1.github.io/shop/data2.json')
+                  // .then(결과=>결과.json()) JSON => array/object 변환과정 필요
+                  // .then(data=>{})
+                  // 자주묻는 질문 : ajax로 가져온 데이터를 html에 꽂을 때 왜 에러남?
+                  // 1. ajax요청으로 데이터를 가져와서
+                  // 2. state에 저장하라고 코드를 짜놨고
+                  // 3. state를 html에 넣어서 보여달라고 <div> {state.어쩌구} </div> 이렇게 코드 짰습니다.
+                  // 잘 될 것 같은데 이 상황에서 state가 텅 비어있다고 에러가 나는 경우가 많습니다.
+                  // 이유는 ajax 요청보다 html 렌더링이 더 빨라서 그럴 수 있습니다.
+                  // state안에 뭐가 들어있으면 보여달라고 if문 같은걸 추가하거나 그러면 됩니다.
+                }}>더보기</button>
+                : null
+              }
+              {
+                load == false
+                ? <div>로딩중입니다.</div>
+                : null
+              }
             </div>
           </>
         }>
