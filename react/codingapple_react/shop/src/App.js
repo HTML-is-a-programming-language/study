@@ -5,10 +5,11 @@ import { Navbar, Container, Nav } from 'react-bootstrap';
 import data from './data.js';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './pages/Detail.js';
+import axios from 'axios';
 
 function App() {
 
-  let [shoes] = useState(data);
+  let [shoes, setShoes] = useState(data);
   let navigate = useNavigate();
 
   return (
@@ -45,6 +46,37 @@ function App() {
                 <Card shoes={shoes[1]} i={2}></Card>
                 <Card shoes={shoes[2]} i={3}></Card> */}
               </div>
+
+              {/* 서버에 데이터를 요청
+              서버 : 부탁하면 진짜로 들어주는 프로그램
+              youtube 서버 : 동영상 요청하면 진짜 보내주는 프로그램
+              서버개발 시 짜는 코드 : 누가 A요청하면 A 보내주세요~
+              누가 comic.naver.com으로 요청하면 웹툰 보내주세요~
+              1. 방법(GET/POST)
+              GET는 데이터 가져올 때 / POST는 데이터 보낼 때
+              2. 어떤자료 (URL) : 서버만든 사람에게 물어보면 됩니다.
+              ajax 사용하면 새로고침 없이도 GET/POST요청 가능
+              ajax 쓰려면 옵션 3개 중 택1
+              1. XMLHttpRequest
+              2. fetch()
+              3. axios 같은거
+              npm install axios
+              import axios from 'axios';
+              ajax 이용한 GET요청은 axios.get('url')
+              요청결과는 axios.get('url').then()
+              ajax 요청 실패할 경우
+              .catch(()=>{})*/}
+              <button onClick={()=>{
+                axios.get('https://codingapple1.github.io/shop/data2.json')
+                .then((결과)=>{
+                  console.log(결과.data);
+                  setShoes(prevList => [...prevList, ...결과.data]);
+                })
+                .catch(()=>{
+                  console.log('실패함')
+                })
+
+              }}>버튼</button>
             </div>
           </>
         }>
