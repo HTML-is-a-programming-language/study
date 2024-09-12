@@ -32,9 +32,6 @@ function Detail(props){
       alert('그러지마세요') // alert state가 정의되어 있어서 작동하지 않았음
     }
 
-    // 리액트의 automatic batching 기능
-    setTimeout(()=>{setShow('end')}, 100)
-
     // 렌더링 후에 동작
     // 오래걸리는 반복연산, 서버에서 데이터가져오는 작업, 타이머
     // for (var i = 0; i < 10000; i++){
@@ -50,7 +47,6 @@ function Detail(props){
     return ()=>{
       console.log(1);
       //clearTimeout(a);
-      setShow('')
     }
     // useEffect 실행조건 넣을 수 있는 곳은 []
     // count라는 state가 변할 때만 실행됨
@@ -58,6 +54,15 @@ function Detail(props){
     // 컴포넌트 mount시 1회만 실행하고 싶으면 []
 
   }, [count, num])
+
+  // 내가 만든 숙제 Detail 컴포넌트 로드시 투명도가 0에서 1로 서서히 증가하는 애니메이션을 주려면?
+  useEffect(() =>{
+    setShow('end')
+
+    return ()=>{
+      setShow('')
+    }
+  }, [])
 
   // useEffect(()=>{}) 1. 재렌더링마다 코드실행하고 싶으면
   // useEffect(()=>{},[]) 2. mount시 1회 코드실행하고 싶으면
@@ -71,6 +76,7 @@ function Detail(props){
 
   return (
     <div className={'container start ' + show}>
+      {/* 내가 만든 숙제 Detail 컴포넌트 로드시 투명도가 0에서 1로 서서히 증가하는 애니메이션을 주려면? */}
       {/* {
         alert == true
         ? <div className="alert alert-warning">
