@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 
+// state 사용은 1. Context를 import
+import {Context1} from './../App.js'
 
 // class Detail2 extends React.Component {
 //   componentDidMount(){
@@ -16,6 +18,10 @@ import { Nav } from 'react-bootstrap';
 // }
 
 function Detail(props){
+
+  // state 사용은 2. useContext(Context)
+  // 보관함 해체해줌
+  let {재고} = useContext(Context1)
 
   let {id} = useParams();
   let 찾은상품 = props.shoes.find(function(x){
@@ -86,6 +92,7 @@ function Detail(props){
       } */}
 
       {count}
+      {재고}
       <button onClick={()=>{ setCount(count+1)}}>버튼</button>
       <div className="row">
         <div className="col-md-6">
@@ -126,7 +133,7 @@ function Detail(props){
       {
         탭 == 2 ? <div>내용2</div> : null
       } */}
-      <TabContent 탭={탭}/>
+      <TabContent 탭={탭} shoes={props.shoes}/>
     </div>
   )
 }
@@ -145,11 +152,18 @@ function Detail(props){
 //   }
 // }
 
-function TabContent({탭}){
+function TabContent({탭, shoes}){
   // (팁2) 센스좋으면 if 필요없을 수도
   // 4. 원할때 end 부착하면 끝임, 탭 state가 변할 때 end 부착
 
   let [fade, setFade] = useState('');
+  // Detail 뿐만 아니라 그 자식들도 props 없이 사용가능
+  // 편한지 모르겠음 => 쓰지마셈
+  // Context API 특징
+  // 1. state변경시 쓸데없는 것까지 재렌더링
+  // 2. 나중에 컴포넌트 재사용이 어려움
+  // Context API 보다는 외부 라이브러리 사용합니다
+  let {재고} = useContext(Context1)
 
   useEffect(()=>{
     // 리액트의 automatic batching 기능
@@ -161,7 +175,7 @@ function TabContent({탭}){
   }, [탭]) // 탭이라는게 변경될 때마다 안의 코드 실행해줌
 
   return <div className={'start ' + fade}>
-    {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][탭]}
+    {[<div>{shoes[0].title}</div>, <div>내용1</div>, <div>내용2</div>][탭]}
   </div>
 }
 
@@ -173,4 +187,10 @@ function TabContent({탭}){
 // 3. className에 transition 속성 추가
 // 4. 원할 때 2번 className 부착
 
+// Single Page Application 단점 : 컴포넌트간 state 공유 어려움
+// 부모컴포넌트 => 자식컴포넌트 props 전송은 가능
+// props 싫으면
+// 1. Context API (리액트 기본문법)
+// 2. Redux 등 외부라이브러리
+// Context API 쓰면 props 전송없이 state 공유가능 (실제로는 잘 안씀)
 export default Detail;

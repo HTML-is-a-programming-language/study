@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { createContext, useState } from 'react';
 import './App.css';
 import { Navbar, Container, Nav } from 'react-bootstrap';
 // import bg from './img/bg.png';
@@ -7,10 +7,16 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './pages/Detail.js';
 import axios from 'axios';
 
+// Context API
+// 셋팅1. createContext()
+// state 보관함임
+export let Context1 = createContext()
+
 function App() {
 
   // 리액트에서 서버와 통신하려면 ajax 1 내가 만든 숙제 / 동일함
   let [shoes, setShoes] = useState(data);
+  let [재고] = useState([10, 11, 12]);
   let navigate = useNavigate();
   // 리액트에서 서버와 통신하려면 ajax 2 : post, fetch 내가 만든 숙제
   // 응용1. 버튼 2회 누를 때는 7,8,9번 상품 가져오려면?
@@ -157,7 +163,13 @@ function App() {
           </>
         }>
         </Route>
-        <Route path="/detail/:id" element={<Detail shoes={shoes} />} />
+        <Route path="/detail/:id" element={
+          // 셋팅2. <Context>로 원하는 컴포넌트 감싸기
+          // 셋팅3. value={{state1, state2...}}
+          <Context1.Provider value={{ 재고 }}>
+          <Detail shoes={shoes} />
+          </Context1.Provider>
+        } />
         <Route path="*" element={<div>없는페이지요</div>} />
         <Route path="/about" element={<About />}>
           <Route path="member" element={<div>멤버임</div>} />
