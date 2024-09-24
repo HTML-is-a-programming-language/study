@@ -11,27 +11,55 @@ import { configureStore, createSlice } from '@reduxjs/toolkit'
 
 let user = createSlice({
     name: 'user',
-    initialState : 'kim'
+    initialState : 'kim',
+
+    // Redux의 state 변경하는 법
+    // - state 수정해주는 함수만들고
+    // - 원할 때 그 함수 실행해달라고 store.js에 요청
+    // 1. state 수정해주는 함수만들기
+    reducers : {
+        changeName(state){
+            return 'john ' + state
+        }
+    }
 })
+
+// 2. 만든 함수 export 해야함
+export let { changeName, changeCounter } = user.actions
 
 // let stock = createSlice({
 //     name: 'stock',
 //     initialState : [10, 11, 12]
 // })
 
-let data = createSlice({
-    name: 'data',
+let cart = createSlice({
+    name: 'cart',
     initialState :[
         {id : 0, name : 'White and Black', count : 2},
         {id : 2, name : 'Grey Yordan', count : 1}
     ]
 })
 
+let counter = createSlice({
+    name: 'counter',
+    initialState : 0,
+
+    // Redux의 state 변경하는 법
+    // - state 수정해주는 함수만들고
+    // - 원할 때 그 함수 실행해달라고 store.js에 요청
+    // 1. state 수정해주는 함수만들기
+    reducers : {
+        changeCounter(state){
+            return state
+        }
+    }
+})
 
 export default configureStore({
     reducer: {
         user : user.reducer,
         // stock : stock.reducer
-        data : data.reducer
+        cart : cart.reducer,
+        count : counter.reducer
     }
 })

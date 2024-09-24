@@ -1,13 +1,17 @@
 import {Table} from 'react-bootstrap'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+// 3. 만든 함수 import해서 사용
+import { changeName, changeCounter } from './../store.js'
 
 function Cart(){
-
     let state = useSelector((state)=>state)
-    console.log(state.data)
+    let dispatch = useDispatch()
 
     return (
         <div>
+
+            {state.user}의 장바구니
+
            <Table>
                 <thead>
                     <tr>
@@ -18,22 +22,24 @@ function Cart(){
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>{state.data[0].id}</td>
-                        <td>{state.data[0].name}</td>
-                        <td>{state.data[0].count}</td>
-                        <td>변경</td>
-                    </tr>
-                    <tr>
-                        <td>{state.data[1].id}</td>
-                        <td>{state.data[1].name}</td>
-                        <td>{state.data[1].count}</td>
-                        <td>변경</td>
-                    </tr>
+                    {
+                        state.cart.map((a, i)=>
+                            <tr key={i}>
+                                <td>{state.cart[i].id}</td>
+                                <td>{state.cart[i].name}</td>
+                                <td>{state.cart[i].count}</td>
+                                <td>
+                                    <button onClick={()=>{
+                                        dispatch(changeCounter())
+                                    }}>+</button>
+                                </td>
+                            </tr>
+                        )
+                    }
                 </tbody>
             </Table>
         </div>
     )
 }
 
-export default Cart
+export default Cart;
