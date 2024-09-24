@@ -11,7 +11,7 @@ import { configureStore, createSlice } from '@reduxjs/toolkit'
 
 let user = createSlice({
     name: 'user',
-    initialState : 'kim',
+    initialState : { name : 'kim', age : 20 },
 
     // Redux의 state 변경하는 법
     // - state 수정해주는 함수만들고
@@ -19,13 +19,17 @@ let user = createSlice({
     // 1. state 수정해주는 함수만들기
     reducers : {
         changeName(state){
-            return 'john ' + state
-        }
+            // array/object의 경우 직접수정해도 state 변경됩니다
+            state.name = 'park'
+        },
+        increase(state){
+            state.age += 1
+        },
     }
 })
 
 // 2. 만든 함수 export 해야함
-export let { changeName, changeCounter } = user.actions
+export let { changeName, changeCounter, increase } = user.actions
 
 // let stock = createSlice({
 //     name: 'stock',
@@ -50,7 +54,7 @@ let counter = createSlice({
     // 1. state 수정해주는 함수만들기
     reducers : {
         changeCounter(state){
-            return state
+            return state += 1;
         }
     }
 })
