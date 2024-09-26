@@ -8,28 +8,7 @@
 // Redux 왜 씀?
 // 컴포넌트간 state 공유 편해짐
 import { configureStore, createSlice } from '@reduxjs/toolkit'
-
-let user = createSlice({
-    name: 'user',
-    initialState : { name : 'kim', age : 20 },
-
-    // Redux의 state 변경하는 법
-    // - state 수정해주는 함수만들고
-    // - 원할 때 그 함수 실행해달라고 store.js에 요청
-    // 1. state 수정해주는 함수만들기
-    reducers : {
-        changeName(state){
-            // array/object의 경우 직접수정해도 state 변경됩니다
-            state.name = 'park'
-        },
-        increase(state){
-            state.age += 1
-        },
-    }
-})
-
-// 2. 만든 함수 export 해야함
-export let { changeName, changeCounter, increase } = user.actions
+import user from './store/userSlice.js'
 
 // let stock = createSlice({
 //     name: 'stock',
@@ -41,29 +20,32 @@ let cart = createSlice({
     initialState :[
         {id : 0, name : 'White and Black', count : 2},
         {id : 2, name : 'Grey Yordan', count : 1}
-    ]
-})
-
-let counter = createSlice({
-    name: 'counter',
-    initialState : 0,
-
-    // Redux의 state 변경하는 법
-    // - state 수정해주는 함수만들고
-    // - 원할 때 그 함수 실행해달라고 store.js에 요청
-    // 1. state 수정해주는 함수만들기
+    ],
     reducers : {
-        changeCounter(state){
-            return state += 1;
+        addCount(state, action){
+            let 번호 = state.findIndex((a)=>{ return a.id === action.payload })
+            state[번호].count++
+        },
+        addItem(state, action){
+            let index = state.findIndex((a)=>{ return a.id === action.payload.id })
+            if(index === -1){
+                state.push(action.payload)
+            } else {
+                state[index].count += 1
+            }
+        },
+        deleteItem(state, action){
+            state.splice(action.payload, 1)
         }
     }
 })
+
+export let { addCount, addItem, deleteItem } = cart.actions
 
 export default configureStore({
     reducer: {
         user : user.reducer,
         // stock : stock.reducer
-        cart : cart.reducer,
-        count : counter.reducer
+        cart : cart.reducer
     }
 })

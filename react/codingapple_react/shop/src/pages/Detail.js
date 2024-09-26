@@ -4,6 +4,8 @@ import { Nav } from 'react-bootstrap';
 
 // state 사용은 1. Context를 import
 import {Context1} from './../App.js'
+import { addItem } from '../store.js';
+import { useDispatch } from 'react-redux';
 
 // class Detail2 extends React.Component {
 //   componentDidMount(){
@@ -32,6 +34,7 @@ function Detail(props){
   let [num, setNum] = useState('');
   let [탭, 탭변경] = useState(0);
   let [show, setShow] = useState('');
+  let dispatch = useDispatch()
 
   useEffect(() =>{
     if (isNaN(num) == true){
@@ -103,7 +106,9 @@ function Detail(props){
           <h4 className="pt-5">{찾은상품.title}</h4>
           <p>{찾은상품.content}</p>
           <p>{찾은상품.price}원</p>
-          <button className="btn btn-danger">주문하기</button>
+          <button className="btn btn-danger" onClick={()=>{
+            dispatch(addItem({id : 찾은상품.id, name : 찾은상품.title, count : 1}))
+          }}>주문하기</button>
         </div>
       </div>
 
