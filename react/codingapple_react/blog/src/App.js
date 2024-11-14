@@ -26,6 +26,9 @@ function App() {
     console.log(1);
   }*/
 
+  // 2. UI의 현재 상태를 state로 저장
+  let [modal, setModal] = useState(false);
+
   return (
     // return () 안에는 병렬로 태그 2개 이상 기입금지
     <div className="App"> {/* html은 당연히 .html 파일에 적어야 .js 파일인데도 적히는 이유는 실은 html이 아니라 JSX임 */}
@@ -66,13 +69,22 @@ function App() {
         <p>2월 17일 발행</p>
       </div>
       <div className="list">
-        <h4>{ 글제목[2] }</h4>
+        {/* Q. 제목 클릭시 모달창 띄우기? => 클릭시 state만 조절하면 됩니다 */}
+        {/* 숙제 : Q. 제목 또 누르면 모달창 사라지게? */}
+        <h4 onClick={()=>{ setModal(!modal) }}>{ 글제목[2] }</h4>
         <p>2월 17일 발행</p>
       </div>
       {/* <h4>{ post }</h4> */} {/* 실제서비스면 서버 이런데서 블로그 글 가져와서 보여줄듯 */} {/* JSX 문법2. 데이터바인딩은 (변수넣을 땐) {중괄호} */}
 
-      <Modal></Modal> {/* <함수명></함수명>, <함수명/> 둘 다 가능 / 어떤걸 컴포넌트로 만들면 좋은가 1. 반복적인 html 축양할 때 2. 큰 페이지들 3. 자주변경되는 것들 */}
+
+      {/* <Modal></Modal> <함수명></함수명>, <함수명/> 둘 다 가능 / 어떤걸 컴포넌트로 만들면 좋은가 1. 반복적인 html 축양할 때 2. 큰 페이지들 3. 자주변경되는 것들 */}
       {/* 컴포넌트 아무거나 만들기 */}
+      {/* 동적인 UI 만드는 step 1. html css로 미리 디자인완성 2. UI의 현재 상태를 state로 저장 3. state에 따라 UI가 어떻게 보일지 작성 */}
+      {/* 3. state에 따라 UI가 어떻게 보일지 작성 / 삼항연산자 (ternary operator) 조건식 ? 참일때 실행할 코드 : 거짓일 때 실행할 코드 */}
+      {/* 리액트에서는 버튼누르면 모달창 스위치(state)만 건드림 / 그냥 자바스크립트였으면 버튼누르면 모달창 html을 직접 건드림 */}
+      {
+        modal == true ? <Modal/> : null
+      }
     </div>
   );
 }
@@ -86,6 +98,7 @@ function App() {
 // 컴포넌트 만드는 법 1. function 만들고 2. return() 안에 html 담기 3. <함수명></함수명> 쓰기 / 다른 function 바깥에 만들어야함 / 작명시 영어대문자로 시작 / return 안에는 두개 이상의 div를 병렬식으로 작성 X / (참고1) return () 안에 html 병렬기입하려면 <div></div> 하나로 감싸기, 의미없는 <div> 대신 <></> 사용가능 (fragment 문법) / 컴포넌트의 단점 : state 가져다쓸 때 문제생김 (A 함수에 있던 변수는 B 함수에서 맘대로 가져다 쓸 수 없음)
 function Modal(){
   return (
+    // 1. html css로 미리 디자인완성
     <div className="modal-window">
       <h4>제목</h4>
       <p>날짜</p>
