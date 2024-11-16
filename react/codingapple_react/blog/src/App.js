@@ -37,6 +37,8 @@ function App() {
   // (중요) state 만드는 곳은 state 사용하는 컴포넌트들 중 최상위 컴포넌트 (생각 귀찮으면 그냥 App에 만들기)
   let [title, setTitle] = useState(0); // UI 조작하고 싶으면 title이라는 스위치만 조작하면 됩니다
 
+  let [입력값, 입력값변경] = useState('');
+
   return (
     // return () 안에는 병렬로 태그 2개 이상 기입금지
     <div className="App"> {/* html은 당연히 .html 파일에 적어야 .js 파일인데도 적히는 이유는 실은 html이 아니라 JSX임 */}
@@ -95,25 +97,45 @@ function App() {
             // (참고2) 반복문으로 html 생성하면 key={html마다 다른숫자} 추가해야함
             <div className="list" key={i}>
               {/* 오늘의 숙제 : 따봉갯수 개별로 기록하기 */}
+              {/* Q. 왜 <span> 눌러도 모달창 뜸? 클릭이벤트는 상위html로 퍼짐(이벤트버블링), 상위html로 퍼지는 이벤트버블링을 막고싶으면 e.stopPropagation(); */}
               <h4 onClick={()=>{
                 setModal(true);
                 setTitle(i);
               }}>{ 글제목[i] }
-                <span onClick={() => {
+                <span onClick={(e) => {
+                  e.stopPropagation();
                   let copy = [...따봉];
                   copy[i] = copy[i] + 1;
                   따봉변경(copy);
                 }}>👍</span> {따봉[i]}
               </h4>
               <p>2월 17일 발행</p>
+              {/* 오늘의 숙제2 : 글마다 삭제버튼 & 기능 만들기 */}
+              <button onClick={()=>{
+                let copy = [...글제목];
+                copy.splice(i);
+                글제목변경(copy);
+              }}>삭제</button>
             </div>
           )
         })
       }
 
-      <button onClick={()=>{setTitle(0)}}>글제목0</button>
+      {/* <button onClick={()=>{setTitle(0)}}>글제목0</button>
       <button onClick={()=>{setTitle(1)}}>글제목1</button>
-      <button onClick={()=>{setTitle(2)}}>글제목2</button>
+      <button onClick={()=>{setTitle(2)}}>글제목2</button> */}
+
+      <input onChange={(e)=>{
+        입력값변경(e.target.value);
+        console.log(입력값); // (정보) state변경함수는 늦게처리됨 (전문용어로 비동기처리), 입력값변경(e.target.value); 이 완료되기 전에 console.log(입력값); 실행해줌
+      }} /> {/* 리액트에서는 항상 태그를 닫아줘야함, <input>에 뭔가 입력시 코드실행하고 싶으면 onChange / onInput, <input>에 입력한 값 가져오는 법, e는 지금 발생하는 이벤트에 관련한 여러 기능이 담겨있음, <input> 에 입력한 값 저장하려면 */}
+
+      {/* 오늘의 숙제 : 버튼누르면 글 하나 추가되는 기능 만들기, 힌트1. html 직접 하나 만들 필요없음 state 조작하면 됩니다. 힌트2. array에 자료 추가하는 법은.. 당연히 구글 */}
+      <button onClick={()=>{
+        let copy = [...글제목];
+        copy.push(입력값);
+        글제목변경(copy);
+      }}>글 추가</button>
 
       {/* (참고1) 일반 for 반복문 써서 html 생성하려면 1. html들을 담아둘 array 자료를 하나 만들어줍니다. 2. 일반 for 반복문을 이용해서 반복문을 돌림 3. 반복될 때 마다 array 자료에 <div> 하나씩 추가해줍니다. 4. 원하는 곳에서 {array자료} 사용하면 됩니다. */}
       {/*
