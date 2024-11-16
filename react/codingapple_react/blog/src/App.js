@@ -92,7 +92,7 @@ function App() {
             // (참고2) 반복문으로 html 생성하면 key={html마다 다른숫자} 추가해야함
             <div className="list" key={i}>
               {/* 오늘의 숙제 : 따봉갯수 개별로 기록하기 */}
-              <h4>{ 글제목[i] }
+              <h4 onClick={()=>{setModal(true)}}>{ 글제목[i] }
                 <span onClick={() => {
                   let copy = [...따봉];
                   copy[i] = copy[i] + 1;
@@ -127,7 +127,9 @@ function App() {
       {/* 3. state에 따라 UI가 어떻게 보일지 작성 / 삼항연산자 (ternary operator) 조건식 ? 참일때 실행할 코드 : 거짓일 때 실행할 코드 */}
       {/* 리액트에서는 버튼누르면 모달창 스위치(state)만 건드림 / 그냥 자바스크립트였으면 버튼누르면 모달창 html을 직접 건드림 */}
       {
-        modal == true ? <Modal/> : null
+        // (참고) props로 일반 문자도 전송가능
+        // modal == true ? <Modal color="skyblue" 글제목={글제목}/> : null
+        modal == true ? <Modal color={'skyblue'} 글제목={글제목} 글제목변경={글제목변경}/> : null
       }
     </div>
   );
@@ -139,14 +141,29 @@ function App() {
 //   );
 // }; // (참고) 컴포넌트 만드는 문법2 / const로 만들면 중복됐을 때 콘솔창에서 알려줌
 
+// function 함수(){
+//   let a = 10; 모든 변수는 함수탈출불가
+// }
+
 // 컴포넌트 만드는 법 1. function 만들고 2. return() 안에 html 담기 3. <함수명></함수명> 쓰기 / 다른 function 바깥에 만들어야함 / 작명시 영어대문자로 시작 / return 안에는 두개 이상의 div를 병렬식으로 작성 X / (참고1) return () 안에 html 병렬기입하려면 <div></div> 하나로 감싸기, 의미없는 <div> 대신 <></> 사용가능 (fragment 문법) / 컴포넌트의 단점 : state 가져다쓸 때 문제생김 (A 함수에 있던 변수는 B 함수에서 맘대로 가져다 쓸 수 없음)
-function Modal(){
+// <App> (부모 컴포넌트) <Modal> (자식 컴포넌트) 자식이 부모가 가지고 있던 state 사용가능 (props 문법 사용)
+// 부모 => 자식 state 전송하는 법 props 문법 쓰면 되는데 1. <자식컴포넌트 작명={state이름}> 2. props 파라미터 등록 후 props.작명 사용
+// props 전송은 부모 => 자식만 가능, 자식 => 부모 불가능, 자식 => 자식 불가능, 컴포넌트 많아지면 props 쓰는게 귀찮아짐
+// (정보) 파라미터문법은 다양한 기능을 하는 함수를 만들 때 사용함 (실은 props도 파라미터 문법일 뿐)
+function Modal(props){
   return (
     // 1. html css로 미리 디자인완성
-    <div className="modal-window">
-      <h4>제목</h4>
+    <div className="modal-window" style={{background : props.color}}>
+      {/* 모달창안에 첫 째 글제목을 넣어보자 */}
+      <h4>{props.글제목[0]}</h4>
       <p>날짜</p>
       <p>상세내용</p>
+      {/* 오늘의 숙제 : 글수정 버튼누르면 첫 글 제목이 '여자코트 추천'으로 바뀌어야함 */}
+      <button onClick={()=>{
+        let copy = [...props.글제목];
+        copy[0] = '여자코트 추천';
+        props.글제목변경(copy);
+      }}>글수정</button>
     </div>
   )
 }
