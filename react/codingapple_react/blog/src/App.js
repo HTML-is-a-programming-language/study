@@ -20,7 +20,7 @@ function App() {
   // let a = num[0];
   // let c = num[1];
 
-  let [따봉, 따봉변경] = useState(0);
+  let [따봉, 따봉변경] = useState([0,0,0]);
 
   /*function 함수(){ // 긴 코드를 한 단어로 묶어주는 문법
     console.log(1);
@@ -28,6 +28,11 @@ function App() {
 
   // 2. UI의 현재 상태를 state로 저장
   let [modal, setModal] = useState(false);
+
+  // map() 사용법, ()안에 들어가는 function(){} 을 콜백함수라고 함, 1. array 자료 갯수만큼 함수안의 코드 실행해줌, 2. 함수의 파라미터는 array안에 있던 자료임, 3. return에 뭐 적으면 array로 담아줌(array 자료 갯수만큼 담아줌)
+  /*[1,2,3].map(function(a){
+    return '1233211'
+  })*/
 
   return (
     // return () 안에는 병렬로 태그 2개 이상 기입금지
@@ -60,8 +65,9 @@ function App() {
 
       {/* 글목록 UI 만들기 */}
       {/* (숙제) 제목들을 state로 만들어보기 */}
-      <div className="list">
-        <h4>{ 글제목[0] } <span onClick={() => { 따봉변경(따봉+1) }}>{/* onClick={} 안에는 함수이름을 넣어야함 / 함수만드는 문법 바로 넣어도 상관없음 function(){console.log(1)} 또는 () => {console.log(1)} */} {/* state 변경하는 법 등호로 변경금지 state변경함수(새로운state) */} 👍 {/* 구글크롬 주소창에서 오른쪽 버튼 → 그림 이모티콘 */}</span> {따봉} {/* 페이지안에서 자주 바뀌는 것들은 state로 만들면 좋다고 했음 */}</h4>
+      {/* 반복문으로 같은 html 반복생성하는 법 */}
+      {/* <div className="list">
+        <h4>{ 글제목[0] } <span onClick={() => { 따봉변경(따봉+1) }}> onClick={} 안에는 함수이름을 넣어야함 / 함수만드는 문법 바로 넣어도 상관없음 function(){console.log(1)} 또는 () => {console.log(1)} state 변경하는 법 등호로 변경금지 state변경함수(새로운state) 👍 구글크롬 주소창에서 오른쪽 버튼 → 그림 이모티콘 </span> {따봉} 페이지안에서 자주 바뀌는 것들은 state로 만들면 좋다고 했음</h4>
         <p>2월 17일 발행</p>
       </div>
       <div className="list">
@@ -69,12 +75,50 @@ function App() {
         <p>2월 17일 발행</p>
       </div>
       <div className="list">
-        {/* Q. 제목 클릭시 모달창 띄우기? => 클릭시 state만 조절하면 됩니다 */}
-        {/* 숙제 : Q. 제목 또 누르면 모달창 사라지게? */}
+        Q. 제목 클릭시 모달창 띄우기? => 클릭시 state만 조절하면 됩니다
+        숙제 : Q. 제목 또 누르면 모달창 사라지게?
         <h4 onClick={()=>{ setModal(!modal) }}>{ 글제목[2] }</h4>
         <p>2월 17일 발행</p>
-      </div>
+      </div> */}
       {/* <h4>{ post }</h4> */} {/* 실제서비스면 서버 이런데서 블로그 글 가져와서 보여줄듯 */} {/* JSX 문법2. 데이터바인딩은 (변수넣을 땐) {중괄호} */}
+
+      {/* 같은 html 반복생성하는 법 보통은 for 문법쓰면 되는데.. 중괄호 안에서는 for 반복문 사용불가 */}
+      {/* map()으로 같은 html 반복생성하는 법, map을 쓰고나면 그 자리에 [] 남음, 결론 : 비슷한 html 반복생성하려면 map() 쓰면 됩니다 */}
+      {
+        // [<div>안녕</div>,<div>안녕</div>,<div>안녕</div>] 리액트는 array 안에 html 담아놔도 잘 보여줌
+        // map() 함수 1. 왼쪽 array 자료만큼 내부코드 실행해줌 2. return 오른쪽에 있는걸 array로 담아줌 3. 유용한 파라미터 2개 사용가능
+        글제목.map(function(a, i){ // 실제 블로그 글 개수만큼 생성, i는 반복문 돌 때 마다 0부터 1씩 증가하는 정수
+          return (
+            // (참고2) 반복문으로 html 생성하면 key={html마다 다른숫자} 추가해야함
+            <div className="list" key={i}>
+              {/* 오늘의 숙제 : 따봉갯수 개별로 기록하기 */}
+              <h4>{ 글제목[i] }
+                <span onClick={() => {
+                  let copy = [...따봉];
+                  copy[i] = copy[i] + 1;
+                  따봉변경(copy);
+                }}>👍</span> {따봉[i]}
+              </h4>
+              <p>2월 17일 발행</p>
+            </div>
+          )
+        })
+      }
+
+      {/* (참고1) 일반 for 반복문 써서 html 생성하려면 1. html들을 담아둘 array 자료를 하나 만들어줍니다. 2. 일반 for 반복문을 이용해서 반복문을 돌림 3. 반복될 때 마다 array 자료에 <div> 하나씩 추가해줍니다. 4. 원하는 곳에서 {array자료} 사용하면 됩니다. */}
+      {/*
+        function App (){
+          var 어레이 = [];
+          for (var i = 0; i < 3; i++) {
+            어레이.push(<div>안녕</div>)
+          }
+          return (
+            <div>
+              { 어레이 }
+            </div>
+          )
+        }
+      */}
 
 
       {/* <Modal></Modal> <함수명></함수명>, <함수명/> 둘 다 가능 / 어떤걸 컴포넌트로 만들면 좋은가 1. 반복적인 html 축양할 때 2. 큰 페이지들 3. 자주변경되는 것들 */}
