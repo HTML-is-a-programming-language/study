@@ -34,6 +34,9 @@ function App() {
     return '1233211'
   })*/
 
+  // (중요) state 만드는 곳은 state 사용하는 컴포넌트들 중 최상위 컴포넌트 (생각 귀찮으면 그냥 App에 만들기)
+  let [title, setTitle] = useState(0); // UI 조작하고 싶으면 title이라는 스위치만 조작하면 됩니다
+
   return (
     // return () 안에는 병렬로 태그 2개 이상 기입금지
     <div className="App"> {/* html은 당연히 .html 파일에 적어야 .js 파일인데도 적히는 이유는 실은 html이 아니라 JSX임 */}
@@ -92,7 +95,10 @@ function App() {
             // (참고2) 반복문으로 html 생성하면 key={html마다 다른숫자} 추가해야함
             <div className="list" key={i}>
               {/* 오늘의 숙제 : 따봉갯수 개별로 기록하기 */}
-              <h4 onClick={()=>{setModal(true)}}>{ 글제목[i] }
+              <h4 onClick={()=>{
+                setModal(true);
+                setTitle(i);
+              }}>{ 글제목[i] }
                 <span onClick={() => {
                   let copy = [...따봉];
                   copy[i] = copy[i] + 1;
@@ -104,6 +110,10 @@ function App() {
           )
         })
       }
+
+      <button onClick={()=>{setTitle(0)}}>글제목0</button>
+      <button onClick={()=>{setTitle(1)}}>글제목1</button>
+      <button onClick={()=>{setTitle(2)}}>글제목2</button>
 
       {/* (참고1) 일반 for 반복문 써서 html 생성하려면 1. html들을 담아둘 array 자료를 하나 만들어줍니다. 2. 일반 for 반복문을 이용해서 반복문을 돌림 3. 반복될 때 마다 array 자료에 <div> 하나씩 추가해줍니다. 4. 원하는 곳에서 {array자료} 사용하면 됩니다. */}
       {/*
@@ -129,7 +139,7 @@ function App() {
       {
         // (참고) props로 일반 문자도 전송가능
         // modal == true ? <Modal color="skyblue" 글제목={글제목}/> : null
-        modal == true ? <Modal color={'skyblue'} 글제목={글제목} 글제목변경={글제목변경}/> : null
+        modal == true ? <Modal 글제목={글제목} 글제목변경={글제목변경} title={title}/> : null
       }
     </div>
   );
@@ -151,19 +161,22 @@ function App() {
 // props 전송은 부모 => 자식만 가능, 자식 => 부모 불가능, 자식 => 자식 불가능, 컴포넌트 많아지면 props 쓰는게 귀찮아짐
 // (정보) 파라미터문법은 다양한 기능을 하는 함수를 만들 때 사용함 (실은 props도 파라미터 문법일 뿐)
 function Modal(props){
+  // let [title, setTitle] = useState(0); state를 자식에 만들면 부모 => 자식 전송할 필요없을듯
   return (
     // 1. html css로 미리 디자인완성
     <div className="modal-window" style={{background : props.color}}>
       {/* 모달창안에 첫 째 글제목을 넣어보자 */}
-      <h4>{props.글제목[0]}</h4>
+      {/* Q. 지금 누른 글 제목이 모달창안에 뜨게 하려면? */}
+      <h4>{props.글제목[props.title]}</h4> {/* title이 0이면 글제목[0] title이 1이면 글제목[1] title이 2이면 글제목[2] */}
       <p>날짜</p>
       <p>상세내용</p>
+      <button>글수정</button>
       {/* 오늘의 숙제 : 글수정 버튼누르면 첫 글 제목이 '여자코트 추천'으로 바뀌어야함 */}
-      <button onClick={()=>{
+      {/* <button onClick={()=>{
         let copy = [...props.글제목];
         copy[0] = '여자코트 추천';
         props.글제목변경(copy);
-      }}>글수정</button>
+      }}>글수정</button> */}
     </div>
   )
 }
