@@ -39,6 +39,9 @@ function App() {
 
   let [입력값, 입력값변경] = useState('');
 
+  // 응용3. 날짜데이터는?
+  let [date, setDate] = useState(['2024년 2월 17일 18시 00분 00초 발행','2024년 2월 17일 18시 00분 00초 발행','2024년 2월 17일 18시 00분 00초 발행']);
+
   return (
     // return () 안에는 병렬로 태그 2개 이상 기입금지
     <div className="App"> {/* html은 당연히 .html 파일에 적어야 .js 파일인데도 적히는 이유는 실은 html이 아니라 JSX임 */}
@@ -109,11 +112,11 @@ function App() {
                   따봉변경(copy);
                 }}>👍</span> {따봉[i]}
               </h4>
-              <p>2월 17일 발행</p>
+              <p>{ date[i] }</p>
               {/* 오늘의 숙제2 : 글마다 삭제버튼 & 기능 만들기 */}
               <button onClick={()=>{
                 let copy = [...글제목];
-                copy.splice(i);
+                copy.splice(i, 1);
                 글제목변경(copy);
               }}>삭제</button>
             </div>
@@ -131,11 +134,31 @@ function App() {
       }} /> {/* 리액트에서는 항상 태그를 닫아줘야함, <input>에 뭔가 입력시 코드실행하고 싶으면 onChange / onInput, <input>에 입력한 값 가져오는 법, e는 지금 발생하는 이벤트에 관련한 여러 기능이 담겨있음, <input> 에 입력한 값 저장하려면 */}
 
       {/* 오늘의 숙제 : 버튼누르면 글 하나 추가되는 기능 만들기, 힌트1. html 직접 하나 만들 필요없음 state 조작하면 됩니다. 힌트2. array에 자료 추가하는 법은.. 당연히 구글 */}
+      {/* Q. 왜 새로고침하면 없어짐? 새로고침시 html js 파일 다시 읽어서 그럼 */}
       <button onClick={()=>{
         let copy = [...글제목];
-        copy.push(입력값);
+        // 응용1. 글에 아무것도 입력안하고 발행버튼 누르는거 막으려면?
+        입력값 ? copy.unshift(입력값) : alert('입력해주세요');
         글제목변경(copy);
-      }}>글 추가</button>
+
+        // 응용2. 글을 하나 추가하면 따봉갯수 개별적용하던 것도 이상해질 수 있습니다.
+        let copyCount = [...따봉];
+        입력값 ? copyCount.unshift(0) : alert('입력해주세요');
+        따봉변경(copyCount);
+
+        // 응용3. 날짜데이터는?
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        const day = currentDate.getDate();
+        const hours = currentDate.getHours();
+        const minutes = currentDate.getMinutes();
+        const seconds = currentDate.getSeconds();
+        const formattedDate = `${year}년 ${String(month).padStart(2, '0')}월 ${String(day).padStart(2, '0')}일 ${String(hours).padStart(2, '0')}시 ${String(minutes).padStart(2, '0')}분 ${String(seconds).padStart(2, '0')}초 발행`;
+        let copyDate = [...date];
+        입력값 ? copyDate.unshift(formattedDate) : alert('입력해주세요');
+        setDate(copyDate);
+      }}>글발행</button>
 
       {/* (참고1) 일반 for 반복문 써서 html 생성하려면 1. html들을 담아둘 array 자료를 하나 만들어줍니다. 2. 일반 for 반복문을 이용해서 반복문을 돌림 3. 반복될 때 마다 array 자료에 <div> 하나씩 추가해줍니다. 4. 원하는 곳에서 {array자료} 사용하면 됩니다. */}
       {/*
