@@ -27,37 +27,299 @@ div {
   padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.header-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 12px;
+  background: #FFF;
+  line-height: 1;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header-wrap .header-container {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-wrap .header-container .home-link {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.header-wrap .header-container .home-link .link-text {
+  font-weight: bold;
+}
+.header-height {
+  height: 48px;
+}
+
+.search-wrap {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  background: #F1F1F1;
+}
+.search-wrap .search-container .search-input-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+}
+.search-wrap .search-container .search-input-box .close-button {
+  display: flex;
+  flex: 0 0 24px;
+  padding: 12px 0;
+  box-sizing: border-box;
+}
+.search-wrap .search-container .search-input-box .input-box {
+  flex: 1 1 auto;
+  position: relative;
+  padding: 8px 0;
+}
+.search-wrap .search-container .search-input-box .input-box input {
+  width: 100%;
+  height: 32px;
+  padding: 0 0 0 12px;
+  border-radius: 16px;
+  background: #0000000d;
+}
+.search-wrap .search-container .search-input-box .input-box .search-button-box {
+  display: flex;
+  gap: 26px;
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+}
+.search-wrap .search-container .search-list-box {
+  background: #FFF;
+}
+.search-wrap .search-container .search-list-box .search-history-list .search-history-item + .search-history-item {
+  border-top: 1px solid #0000000d;
+}
+.search-wrap .search-container .search-list-box .search-history-list .search-history-item .search-history-button {
+  display: flex;
+  padding: 12px 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #065fd4;
+}
+.search-wrap .search-container .search-list-box .search-suggestion-list {
+  border: solid #0000000d;
+  border-width: 1px 0;
+}
+.search-wrap .search-container .search-list-box .search-suggestion-list .search-suggestion-item {
+  display: flex;
+}
+.search-wrap .search-container .search-list-box .search-suggestion-list .search-suggestion-item + .search-suggestion-item {
+  border-top: 1px solid #0000000d;
+}
+.search-wrap .search-container .search-list-box .search-suggestion-list .search-suggestion-item .search-suggestion-button {
+  display: flex;
+  flex: 1 1 auto;
+  padding: 12px 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0F0F0F;
+}
+.search-wrap .search-container .search-list-box .search-suggestion-list .search-suggestion-item .search-input-button {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex: 0 0 38px;
+  background: #0000000d;
 }
 
-.App-link {
-  color: #61dafb;
+.nav-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  overflow-x: scroll;
+  position: fixed;
+  top: 48px;
+  left: 0;
+  width: 100%;
+  padding: 8px 12px;
+  border-top: 1px solid #0000001a;
+  background: #FFF;
+  box-sizing: border-box;
+  line-height: 1;
+  scrollbar-width: none;
+}
+.nav-wrap::-webkit-scrollbar {
+  display: none;
+}
+.nav-wrap .menu-button {
+  padding: 4px 8px;
+  border-radius: 2px;
+  background: #0000000d;
+}
+.nav-wrap .nav-container .nav-list {
+  display: flex;
+  gap: 12px;
+}
+.nav-wrap .nav-container .nav-list .nav-item .nav-button {
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: #0000000d;
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.nav-wrap .nav-container .nav-list .nav-item .nav-button.active {
+  background: #000;
+  color: #FFF;
+}
+.nav-height {
+  height: 50px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+.post-list {
+  border-top: 1px solid #0000001a;
+}
+.post-list .post-item {
+  display: flex;
+  gap: 12px;
+  padding: 4px 12px 16px;
+  border-bottom: 1px solid #0000001a;
+}
+.post-list .post-item .icon-button {
+  display: flex;
+  flex: 0 0 40px;
+  height: 40px;
+  border-radius: 100%;
+}
+.post-list .post-item .post-button {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.post-list .post-item .post-button .post-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.post-list .post-item .post-button .post-text {
+  font-size: 0.75rem;
+  color: #666;
+}
+
+.modal-window-overlay {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #00000099;
+}
+.modal-window-overlay .modal-window-wrap {
+  display: flex;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] {
+  width: 70%;
+  height: 100%;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  width: 100%;
+  background: #FFF;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container .logo-link {
+  display: flex;
+  flex: 0 0 48px;
+  width: 48px;
+  padding: 12px;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container .menu-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container .menu-wrap::-webkit-scrollbar {
+  display: none;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container .menu-wrap .menu-list + .menu-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid #0000001a;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container .menu-wrap .menu-list .menu-link {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 18px;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container .menu-wrap .menu-list .menu-link .link-icon {
+  display: flex;
+  width: 24px;
+  height: 24px;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container .copyright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 48px;
+  font-size: 0.75rem;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="more"] {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0 8px 24px;
+  box-sizing: border-box;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="more"] .modal-window-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 16px;
+  background: #FFF;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="more"] .modal-window-container .drag-handle-box {
+  display: flex;
+  justify-content: center;
+  padding: 8px 0;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="more"] .modal-window-container .drag-handle-box .drag-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 4px;
+  background: #0F0F0F;
+  opacity: .15;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="more"] .modal-window-container .more-list {
+  display: flex;
+  flex-direction: column;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="more"] .modal-window-container .more-list .more-item {
+  padding: 12px;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="more"] .modal-window-container .more-list .more-item button {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.modal-window-overlay .modal-window-wrap[data-modal="more"] .modal-window-container .more-list .more-item button .icon {
+  display: flex;
+}
+
+@media (max-width:359px) {
+  .project-wrap .project-container .project-detail-box .detail-link .detail-box span {
+      width: 100%;
   }
-  to {
-    transform: rotate(360deg);
+  .project-wrap .project-container .project-detail-box .detail-link .detail-box span:after {
+      content: none;
+  }
+  .modal-window-overlay .modal-window-wrap[data-modal="menu"] .modal-window-container .copyright {
+      font-size: 0.625rem;
   }
 }
