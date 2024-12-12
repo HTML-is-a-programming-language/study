@@ -78,6 +78,8 @@ function App() {
 
   let [searchModalWindow, setSearchModalWindow] = useState(false);
   let [menuModalWindow, setMenuModalWindow] = useState(false);
+  let [moreModalWindow, setMoreModalWindow] = useState(false);
+  let [selectedIndex, setSelectedIndex] = useState('');
 
   return (
     // return () 안에는 병렬로 태그 2개 이상 기입금지
@@ -139,15 +141,25 @@ function App() {
       </div>
       <div className="nav-height"></div>
 
+      <div className="function-wrap">
+        <button type="button" className="write-button">글쓰기</button>
+        <select onChange={()=>{
+          let copy = [...글제목];
+          copy.sort();
+          글제목변경(copy)
+        }}>
+          <option value="0">업로드 날짜 기준 정렬</option>
+          <option value="1">좋아요 수 순 정렬</option>
+        </select>
+      </div>
+      <span>글 삭제한 후에 날짜가 변경됨</span>
+
       {/* (숙제) 버튼누르면 글제목 가나다순 정렬 기능 만들기 */}
-      <select onChange={()=>{
-        let copy = [...글제목];
-        copy.sort();
-        글제목변경(copy)
-      }}>
-        <option value="0">업로드 날짜 기준 정렬</option>
-        <option value="1">좋아요 수 순 정렬</option>
-      </select>
+      {/*<button onChange={()=>{
+          let copy = [...글제목];
+          copy.sort();
+          글제목변경(copy)
+      }}>가나다순정렬</button>*/}
 
       {/* (숙제) 버튼누르면 첫 글이 '여자코트 추천'으로 바뀌는 기능만들기 */}
       {/*<button onClick={()=>{
@@ -249,9 +261,9 @@ function App() {
           return (
             <li className="post-item" key={i}>
               <button type="button" className="icon-button">
-                <svg width="100%" height="100%" viewBox="-10.5 -9.45 21 18.9" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-sm me-0 w-10 h-10 text-brand dark:text-brand-dark flex origin-center transition-all ease-in-out">
+                <svg width="100%" height="100%" viewBox="-10.5 -9.45 21 18.9" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-sm me-0 w-10 h-10 text-brand dark:text-brand-dark flex origin-center transition-all ease-in-out">
                   <circle cx="0" cy="0" r="2" fill="#087ea4"></circle>
-                    <g stroke="#087ea4" stroke-width="1" fill="none">
+                    <g stroke="#087ea4" strokeWidth="1" fill="none">
                       <ellipse rx="10" ry="4.5"></ellipse>
                       <ellipse rx="10" ry="4.5" transform="rotate(60)"></ellipse>
                       <ellipse rx="10" ry="4.5" transform="rotate(120)"></ellipse>
@@ -264,34 +276,14 @@ function App() {
                 <h2 className="post-title">{ 글제목[i] }</h2>
                 <p className="post-text">{ date[i] }</p>
               </button>
-
-                <span onClick={async (e) => {
-                    e.stopPropagation();
-
-                    try {
-                      const postRef = doc(db, 'posts', postIds[i]);
-
-                      await updateDoc(postRef, { likes: increment(1) });
-
-                      let copy = [...따봉];
-                      copy[i] = copy[i] + 1;
-                      따봉변경(copy);
-                    } catch (error) {
-                      console.error('Error updating likes: ', error);
-                    }
-                  }}>👍</span> {따봉[i]}
-
-              <button onClick={async ()=>{
-                const idToDelete = postIds[i];
-                try {
-                  await deleteDoc(doc(db, 'posts', idToDelete));
-
-                  글제목변경((prev) => prev.filter((_, idx) => idx !== i));
-                  setPostIds((prev) => prev.filter((_, idx) => idx !== i));
-                } catch (e) {
-                  console.error('Error deleting document: ', e);
-                }
-              }}>삭제</button>
+              <button type="button" className="more-button" onClick={()=>{
+                setMoreModalWindow(true);
+                setSelectedIndex(i);
+              }}>
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
+                  <path d="M480-160q-33 0-56.5-23.5T400-240q0-33 23.5-56.5T480-320q33 0 56.5 23.5T560-240q0 33-23.5 56.5T480-160Zm0-240q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 33-23.5 56.5T480-400Zm0-240q-33 0-56.5-23.5T400-720q0-33 23.5-56.5T480-800q33 0 56.5 23.5T560-720q0 33-23.5 56.5T480-640Z"/>
+                </svg>
+              </button>
             </li>
           )
         })
@@ -404,6 +396,9 @@ function App() {
       }
       {
         menuModalWindow == true ? <MenuModalWindow setMenuModalWindow={setMenuModalWindow}></MenuModalWindow> : null
+      }
+      {
+        moreModalWindow == true ? <MoreModalWindow setMoreModalWindow={setMoreModalWindow} selectedIndex={selectedIndex} postIds={postIds} 글제목변경={글제목변경} setPostIds={setPostIds} 따봉={따봉} 따봉변경={따봉변경}></MoreModalWindow> : null
       }
 
 
@@ -563,9 +558,9 @@ function MenuModalWindow(props){
               <li className="menu-item">
                 <a href="javascript:void(0)" className="menu-link">
                   <span className="link-icon">
-                    <svg width="24" height="24" viewBox="-10.5 -9.45 21 18.9" fill="none" xmlns="http://www.w3.org/2000/svg" class="text-sm me-0 w-10 h-10 text-brand dark:text-brand-dark flex origin-center transition-all ease-in-out">
+                    <svg width="24" height="24" viewBox="-10.5 -9.45 21 18.9" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-sm me-0 w-10 h-10 text-brand dark:text-brand-dark flex origin-center transition-all ease-in-out">
                       <circle cx="0" cy="0" r="2" fill="#087ea4"></circle>
-                      <g stroke="#087ea4" stroke-width="1" fill="none">
+                      <g stroke="#087ea4" strokeWidth="1" fill="none">
                         <ellipse rx="10" ry="4.5"></ellipse>
                         <ellipse rx="10" ry="4.5" transform="rotate(60)"></ellipse>
                         <ellipse rx="10" ry="4.5" transform="rotate(120)"></ellipse>
@@ -640,6 +635,71 @@ function MenuModalWindow(props){
             </ul>
           </div>
           <span className="copyright">© 2024 html-is-a-programming-language</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function MoreModalWindow(props){
+  return (
+    <div className="modal-window-overlay" onClick={()=>{
+      props.setMoreModalWindow(false);
+    }}>
+      <div className="modal-window-wrap active" data-modal="more" onClick={(e)=>{
+        e.stopPropagation();
+      }}>
+        <div className="modal-window-container">
+          <div className="drag-handle-box">
+            <span className="drag-handle"></span>
+          </div>
+          <ul className="more-list">
+            <li className="more-item">
+              <button type="button" className="favorite-button" onClick={async (e) => {
+                  e.stopPropagation();
+
+                  try {
+                    const postRef = doc(db, 'posts', props.postIds[props.selectedIndex]);
+
+                    await updateDoc(postRef, { likes: increment(1) });
+
+                    let copy = [...props.따봉];
+                    copy[props.selectedIndex] = copy[props.selectedIndex] + 1;
+                    props.따봉변경(copy);
+                  } catch (error) {
+                    console.error('Error updating likes: ', error);
+                  }
+                }}>
+                <span className="icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
+                    <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
+                  </svg>
+                </span>
+                <span className="button-text">좋아요<span className="favorite-count">{props.따봉[props.selectedIndex]}</span></span>
+              </button>
+            </li>
+            <li className="more-item">
+              <button type="button" className="delete-button" onClick={async ()=>{
+                const idToDelete = props.postIds[props.selectedIndex];
+                try {
+                  await deleteDoc(doc(db, 'posts', idToDelete));
+
+                  props.글제목변경((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                  props.setPostIds((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                } catch (e) {
+                  console.error('Error deleting document: ', e);
+                }
+                props.setMoreModalWindow(false);
+              }}>
+                <span className="icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
+                    <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
+                  </svg>
+                </span>
+                <span className="button-text">삭제</span>
+              </button>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
