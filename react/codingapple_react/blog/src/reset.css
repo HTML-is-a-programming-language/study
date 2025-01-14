@@ -58,4 +58,11 @@ button {
 input {
 	padding: 0;
 	border: none;
+	color: #0f0f0f;
+}
+input::placeholder {
+	color: #606060;
+}
+textarea {
+	resize: none;
 }

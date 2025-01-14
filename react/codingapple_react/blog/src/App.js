@@ -40,7 +40,7 @@ function App() {
   })*/
 
   // (중요) state 만드는 곳은 state 사용하는 컴포넌트들 중 최상위 컴포넌트 (생각 귀찮으면 그냥 App에 만들기)
-  let [title, setTitle] = useState(0); // UI 조작하고 싶으면 title이라는 스위치만 조작하면 됩니다
+  //let [title, setTitle] = useState(0); // UI 조작하고 싶으면 title이라는 스위치만 조작하면 됩니다
 
   let [입력값, 입력값변경] = useState('');
 
@@ -57,6 +57,8 @@ function App() {
     const dates = [];
     const ids = [];
     const likes = [];
+    const categories = [];
+    const contents = [];
 
     querySnapshot.forEach((doc) => {
       const data = doc.data();
@@ -64,12 +66,16 @@ function App() {
       dates.push(data.date);
       ids.push(doc.id);
       likes.push(data.likes || 0);
+      contents.push(data.content);
+      categories.push(data.category);
     });
 
     글제목변경(titles);
     setDate(dates);
     setPostIds(ids);
     따봉변경(likes);
+    setCategory(categories);
+    setContent(contents);
   };
 
   useEffect(() => {
@@ -79,7 +85,15 @@ function App() {
   let [searchModalWindow, setSearchModalWindow] = useState(false);
   let [menuModalWindow, setMenuModalWindow] = useState(false);
   let [moreModalWindow, setMoreModalWindow] = useState(false);
+  let [writeModalWindow, setWriteModalWindow] = useState(false);
   let [selectedIndex, setSelectedIndex] = useState('');
+  let [postCategory, setPostCategory] = useState('');
+  let [postTitle, setPostTitle] = useState('');
+  let [postContent, setPostContent] = useState('');
+  let [category, setCategory] = useState([]);
+  let [title, setTitle] = useState('');
+  let [content, setContent] = useState([]);
+  let [detailModalWindow, setDetailModalWindow] = useState(false);
 
   return (
     // return () 안에는 병렬로 태그 2개 이상 기입금지
@@ -142,7 +156,9 @@ function App() {
       <div className="nav-height"></div>
 
       <div className="function-wrap">
-        <button type="button" className="write-button">글쓰기</button>
+        <button type="button" className="write-button" onClick={()=>{
+          setWriteModalWindow(true);
+        }}>글쓰기</button>
         <select onChange={()=>{
           let copy = [...글제목];
           copy.sort();
@@ -152,7 +168,6 @@ function App() {
           <option value="1">좋아요 수 순 정렬</option>
         </select>
       </div>
-      <span>글 삭제한 후에 날짜가 변경됨</span>
 
       {/* (숙제) 버튼누르면 글제목 가나다순 정렬 기능 만들기 */}
       {/*<button onChange={()=>{
@@ -260,18 +275,10 @@ function App() {
         글제목.map(function(a, i){
           return (
             <li className="post-item" key={i}>
-              <button type="button" className="icon-button">
-                <svg width="100%" height="100%" viewBox="-10.5 -9.45 21 18.9" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-sm me-0 w-10 h-10 text-brand dark:text-brand-dark flex origin-center transition-all ease-in-out">
-                  <circle cx="0" cy="0" r="2" fill="#087ea4"></circle>
-                    <g stroke="#087ea4" strokeWidth="1" fill="none">
-                      <ellipse rx="10" ry="4.5"></ellipse>
-                      <ellipse rx="10" ry="4.5" transform="rotate(60)"></ellipse>
-                      <ellipse rx="10" ry="4.5" transform="rotate(120)"></ellipse>
-                    </g>
-                  </svg>
-              </button>
+              <button type="button" className={`icon-button ${category[i]}`}></button>
               <button type="button" className="post-button" onClick={()=>{
-                setModal(true);
+                setDetailModalWindow(true);
+                setSelectedIndex(i);
               }}>
                 <h2 className="post-title">{ 글제목[i] }</h2>
                 <p className="post-text">{ date[i] }</p>
@@ -294,10 +301,10 @@ function App() {
       <button onClick={()=>{setTitle(1)}}>글제목1</button>
       <button onClick={()=>{setTitle(2)}}>글제목2</button> */}
 
-      <input id="title" onChange={(e)=>{
+      {/* <input id="title" onChange={(e)=>{
         입력값변경(e.target.value);
         console.log(입력값); // (정보) state변경함수는 늦게처리됨 (전문용어로 비동기처리), 입력값변경(e.target.value); 이 완료되기 전에 console.log(입력값); 실행해줌
-      }} /> {/* 리액트에서는 항상 태그를 닫아줘야함, <input>에 뭔가 입력시 코드실행하고 싶으면 onChange / onInput, <input>에 입력한 값 가져오는 법, e는 지금 발생하는 이벤트에 관련한 여러 기능이 담겨있음, <input> 에 입력한 값 저장하려면 */}
+      }} /> 리액트에서는 항상 태그를 닫아줘야함, <input>에 뭔가 입력시 코드실행하고 싶으면 onChange / onInput, <input>에 입력한 값 가져오는 법, e는 지금 발생하는 이벤트에 관련한 여러 기능이 담겨있음, <input> 에 입력한 값 저장하려면 */}
 
       {/* 오늘의 숙제 : 버튼누르면 글 하나 추가되는 기능 만들기, 힌트1. html 직접 하나 만들 필요없음 state 조작하면 됩니다. 힌트2. array에 자료 추가하는 법은.. 당연히 구글 */}
       {/* Q. 왜 새로고침하면 없어짐? 새로고침시 html js 파일 다시 읽어서 그럼 */}
@@ -326,7 +333,7 @@ function App() {
         //setDate(copyDate);
       }}>글발행</button>*/}
 
-      <button onClick={async () => {
+      {/* <button onClick={async () => {
         if (!입력값) {
           alert('입력해주세요');
           return;
@@ -362,7 +369,7 @@ function App() {
           console.error('Error adding document: ', e);
         }
         document.getElementById('title').value = '';
-      }}>글발행</button>
+      }}>글발행</button> */}
 
       {/* (참고1) 일반 for 반복문 써서 html 생성하려면 1. html들을 담아둘 array 자료를 하나 만들어줍니다. 2. 일반 for 반복문을 이용해서 반복문을 돌림 3. 반복될 때 마다 array 자료에 <div> 하나씩 추가해줍니다. 4. 원하는 곳에서 {array자료} 사용하면 됩니다. */}
       {/*
@@ -388,7 +395,7 @@ function App() {
       {
         // (참고) props로 일반 문자도 전송가능
         // modal == true ? <Modal color="skyblue" 글제목={글제목}/> : null
-        modal == true ? <Modal 글제목={글제목} 글제목변경={글제목변경} title={title} date={date} setDate={setDate}/> : null
+        // modal == true ? <Modal 글제목={글제목} 글제목변경={글제목변경} title={title} date={date} setDate={setDate}/> : null
       }
       {/* <Modal2></Modal2> */}
       {
@@ -398,9 +405,14 @@ function App() {
         menuModalWindow == true ? <MenuModalWindow setMenuModalWindow={setMenuModalWindow}></MenuModalWindow> : null
       }
       {
-        moreModalWindow == true ? <MoreModalWindow setMoreModalWindow={setMoreModalWindow} selectedIndex={selectedIndex} postIds={postIds} 글제목변경={글제목변경} setPostIds={setPostIds} 따봉={따봉} 따봉변경={따봉변경}></MoreModalWindow> : null
+        moreModalWindow == true ? <MoreModalWindow setMoreModalWindow={setMoreModalWindow} setCategory={setCategory} setTitle={setTitle} setContent={setContent} selectedIndex={selectedIndex} postIds={postIds} 글제목변경={글제목변경} setDate={setDate} setPostIds={setPostIds} 따봉={따봉} 따봉변경={따봉변경}></MoreModalWindow> : null
       }
-
+      {
+        writeModalWindow == true ? <WriteModalWindow 글제목변경={글제목변경} setCategory={setCategory} setTitle={setTitle} setContent={setContent} setWriteModalWindow={setWriteModalWindow} postTitle={postTitle} setPostTitle={setPostTitle} postContent={postContent} setPostContent={setPostContent} postCategory={postCategory} setPostCategory={setPostCategory} setDate={setDate} setPostIds={setPostIds} 따봉변경={따봉변경}></WriteModalWindow> : null
+      }
+      {
+        detailModalWindow == true ? <DetailModalWindow 글제목={글제목} 글제목변경={글제목변경} setCategory={setCategory} setTitle={setTitle} setContent={setContent} setDetailModalWindow={setDetailModalWindow} postTitle={postTitle} setPostTitle={setPostTitle} postContent={postContent} setPostContent={setPostContent} postCategory={postCategory} setPostCategory={setPostCategory} setDate={setDate} setPostIds={setPostIds} 따봉={따봉} 따봉변경={따봉변경} selectedIndex={selectedIndex} date={date} content={content} postIds={postIds}></DetailModalWindow> : null
+      }
 
     </div>
   );
@@ -421,26 +433,26 @@ function App() {
 // 부모 => 자식 state 전송하는 법 props 문법 쓰면 되는데 1. <자식컴포넌트 작명={state이름}> 2. props 파라미터 등록 후 props.작명 사용
 // props 전송은 부모 => 자식만 가능, 자식 => 부모 불가능, 자식 => 자식 불가능, 컴포넌트 많아지면 props 쓰는게 귀찮아짐
 // (정보) 파라미터문법은 다양한 기능을 하는 함수를 만들 때 사용함 (실은 props도 파라미터 문법일 뿐)
-function Modal(props){
-  // let [title, setTitle] = useState(0); state를 자식에 만들면 부모 => 자식 전송할 필요없을듯
-  return (
-    // 1. html css로 미리 디자인완성
-    <div className="modal-window" style={{background : props.color}}>
-      {/* 모달창안에 첫 째 글제목을 넣어보자 */}
-      {/* Q. 지금 누른 글 제목이 모달창안에 뜨게 하려면? */}
-      <h4>{props.글제목[props.title]}</h4> {/* title이 0이면 글제목[0] title이 1이면 글제목[1] title이 2이면 글제목[2] */}
-      <p>날짜</p>
-      <p>상세내용</p>
-      <button>글수정</button>
-      {/* 오늘의 숙제 : 글수정 버튼누르면 첫 글 제목이 '여자코트 추천'으로 바뀌어야함 */}
-      {/* <button onClick={()=>{
-        let copy = [...props.글제목];
-        copy[0] = '여자코트 추천';
-        props.글제목변경(copy);
-      }}>글수정</button> */}
-    </div>
-  )
-}
+// function Modal(props){
+//   // let [title, setTitle] = useState(0); state를 자식에 만들면 부모 => 자식 전송할 필요없을듯
+//   return (
+//     // 1. html css로 미리 디자인완성
+//     <div className="modal-window" style={{background : props.color}}>
+//       {/* 모달창안에 첫 째 글제목을 넣어보자 */}
+//       {/* Q. 지금 누른 글 제목이 모달창안에 뜨게 하려면? */}
+//       <h4>{props.글제목[props.title]}</h4> {/* title이 0이면 글제목[0] title이 1이면 글제목[1] title이 2이면 글제목[2] */}
+//       <p>날짜</p>
+//       <p>상세내용</p>
+//       <button>글수정</button>
+//       {/* 오늘의 숙제 : 글수정 버튼누르면 첫 글 제목이 '여자코트 추천'으로 바뀌어야함 */}
+//       {/* <button onClick={()=>{
+//         let copy = [...props.글제목];
+//         copy[0] = '여자코트 추천';
+//         props.글제목변경(copy);
+//       }}>글수정</button> */}
+//     </div>
+//   )
+// }
 
 // function 말고 classs 문법으로도 컴포넌트 생성가능 (몰라도 됩니다)
 // class는 변수, 함수 보관함임
@@ -544,7 +556,7 @@ function MenuModalWindow(props){
     <div className="modal-window-overlay" onClick={()=>{
       props.setMenuModalWindow(false);
     }}>
-      <div className="modal-window-wrap active" data-modal="menu" onClick={(e)=>{
+      <div className="modal-window-wrap" data-modal="menu" onClick={(e)=>{
         e.stopPropagation();
       }}>
         <div className="modal-window-container">
@@ -646,7 +658,7 @@ function MoreModalWindow(props){
     <div className="modal-window-overlay" onClick={()=>{
       props.setMoreModalWindow(false);
     }}>
-      <div className="modal-window-wrap active" data-modal="more" onClick={(e)=>{
+      <div className="modal-window-wrap" data-modal="more" onClick={(e)=>{
         e.stopPropagation();
       }}>
         <div className="modal-window-container">
@@ -671,7 +683,7 @@ function MoreModalWindow(props){
                   }
                 }}>
                 <span className="icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 -960 960 960" width="100%" fill="#000">
                     <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"/>
                   </svg>
                 </span>
@@ -685,14 +697,17 @@ function MoreModalWindow(props){
                   await deleteDoc(doc(db, 'posts', idToDelete));
 
                   props.글제목변경((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                  props.setDate((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
                   props.setPostIds((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                  props.setCategory((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                  props.setContent((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
                 } catch (e) {
                   console.error('Error deleting document: ', e);
                 }
                 props.setMoreModalWindow(false);
               }}>
                 <span className="icon">
-                  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 -960 960 960" width="100%" fill="#000">
                     <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
                   </svg>
                 </span>
@@ -700,6 +715,165 @@ function MoreModalWindow(props){
               </button>
             </li>
           </ul>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function WriteModalWindow(props){
+  return (
+    <div className="modal-window-overlay" onClick={()=>{
+      props.setWriteModalWindow(false);
+    }}>
+      <div className="modal-window-wrap" data-modal="write" onClick={(e)=>{
+        e.stopPropagation();
+      }}>
+        <div className="modal-window-container">
+          <select id="postCategory" name="postCategory" onChange={(e)=>{
+            props.setPostCategory(e.target.value);
+          }}>
+            <option value="">카테고리선택</option>
+            <option value="React">React</option>
+            <option value="Javascript">Javascript</option>
+            <option value="JQuery">JQuery</option>
+            <option value="CSS">CSS</option>
+            <option value="HTML">HTML</option>
+          </select>
+          <input type="text" id="postTitle" name="postTitle" placeholder="제목" onChange={(e)=>{
+            props.setPostTitle(e.target.value);
+          }} />
+          <textarea id="postContent" name="postContent" placeholder="내용" onChange={(e)=>{
+            props.setPostContent(e.target.value);
+          }} />
+          <div className="button-box">
+            <button type="button" className="regist-button" onClick={async () => {
+              if (!props.postCategory) {
+                alert('카테고리를 선택해주세요.');
+                return;
+              }
+
+              if (!props.postTitle) {
+                alert('제목을 입력해주세요.');
+                return;
+              }
+
+              if (!props.postContent) {
+                alert('내용을 입력해주세요.');
+                return;
+              }
+
+              const newPost = {
+                title: props.postTitle,
+                date: new Date().toLocaleString('ko-KR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  second: '2-digit',
+                }),
+                createdAt: new Date(), // Firestore Timestamp
+                likes: 0,
+                content: props.postContent,
+                category: props.postCategory
+              };
+
+              try {
+                // Firestore에 새 글 추가
+                const docRef = await addDoc(collection(db, 'posts'), newPost);
+
+                // 글제목 및 date 상태 업데이트
+                props.글제목변경((prev) => [newPost.title, ...prev]);
+                props.setDate((prev) => [newPost.date, ...prev]);
+                props.setPostIds((prev) => [docRef.id, ...prev]);
+                props.따봉변경((prev) => [newPost.likes, ...prev])
+                props.setContent((prev) => [newPost.content, ...prev])
+                props.setCategory((prev) => [newPost.category, ...prev])
+
+                // 입력값 초기화
+                props.setPostTitle('');
+                props.setPostContent('');
+                props.setPostCategory('');
+
+                props.setWriteModalWindow(false);
+              } catch (e) {
+                console.error('Error adding document: ', e);
+              }
+              document.getElementById('postTitle').value = '';
+              document.getElementById('postContent').value = '';
+              document.getElementById('postCategory').value = '';
+            }}>등록</button>
+            <button type="button" className="cancel-button" onClick={()=>{
+              props.setWriteModalWindow(false);
+            }}>취소</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function DetailModalWindow(props){
+  return (
+    <div className="modal-window-overlay" onClick={()=>{
+      props.setDetailModalWindow(false);
+    }}>
+      <div className="modal-window-wrap" data-modal="detail" onClick={(e)=>{
+        e.stopPropagation();
+      }}>
+        <div className="modal-window-container">
+          <div className="title-box">
+            <h2 className="box-title">{props.글제목[props.selectedIndex]}</h2>
+            <span className="date">{props.date[props.selectedIndex]}</span>
+          </div>
+          <div className="text-box">
+            <p className="box-text">{props.content[props.selectedIndex]}</p>
+          </div>
+          <div className='button-container'>
+            <button type="button" className="favorite-button" onClick={async (e) => {
+                e.stopPropagation();
+
+                try {
+                  const postRef = doc(db, 'posts', props.postIds[props.selectedIndex]);
+
+                  await updateDoc(postRef, { likes: increment(1) });
+
+                  let copy = [...props.따봉];
+                  copy[props.selectedIndex] = copy[props.selectedIndex] + 1;
+                  props.따봉변경(copy);
+                } catch (error) {
+                  console.error('Error updating likes: ', error);
+                }
+              }}>
+              <span className="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 -960 960 960" width="100%" fill="#000">
+                  <path d="m480-120-58-52q-101-91-167-157T150-447.5Q111-500 95.5-544T80-634q0-94 63-157t157-63q52 0 99 22t81 62q34-40 81-62t99-22q94 0 157 63t63 157q0 46-15.5 90T810-447.5Q771-395 705-329T538-172l-58 52Zm0-108q96-86 158-147.5t98-107q36-45.5 50-81t14-70.5q0-60-40-100t-100-40q-47 0-87 26.5T518-680h-76q-15-41-55-67.5T300-774q-60 0-100 40t-40 100q0 35 14 70.5t50 81q36 45.5 98 107T480-228Zm0-273Z"></path>
+                </svg>
+              </span>
+              <span className="button-text">좋아요
+                <span className="favorite-count">{props.따봉[props.selectedIndex]}</span>
+              </span>
+            </button>
+            <div className="button-box">
+              <button type="button" className="edit-button">수정</button>
+              <button type="button" className="delete-button" onClick={async ()=>{
+                const idToDelete = props.postIds[props.selectedIndex];
+                try {
+                  await deleteDoc(doc(db, 'posts', idToDelete));
+
+                  props.글제목변경((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                  props.setDate((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                  props.setPostIds((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                  props.setCategory((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                  props.setContent((prev) => prev.filter((_, idx) => idx !== props.selectedIndex));
+                } catch (e) {
+                  console.error('Error deleting document: ', e);
+                }
+                props.setDetailModalWindow(false);
+              }}>삭제</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
